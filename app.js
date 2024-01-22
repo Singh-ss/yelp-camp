@@ -8,10 +8,16 @@ const wrapAsync = require('./utilities/catchAsync.js');
 const appError = require('./utilities/errorClass.js');
 const { campgroundSchema, reviewSchema } = require('./joiSchema.js');
 const Review = require('./models/review.js');
-const campgroundRouter = require('./routes/campgrounds.js');
-const reviewRouter = require('./routes/reviews.js');
+const campgroundRoutes = require('./routes/campgrounds.js');
+const reviewRoutes = require('./routes/reviews.js');
 const session = require('express-session');
 const flash = require('connect-flash');
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user.js');
+
+const userRoutes = require('./routes/users.js');
 
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp');
 
@@ -43,7 +49,15 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
@@ -52,8 +66,9 @@ app.use((req, res, next) => {
 app.engine('ejs', engine);
 
 //routes from routes folder
-app.use('/campgrounds', campgroundRouter);
-app.use('/campgrounds/:id/reviews', reviewRouter);
+app.use('/', userRoutes);
+app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds/:id/reviews', reviewRoutes);
 
 app.get('/', (req, res) => {
     res.render('home');
