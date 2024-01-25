@@ -110,7 +110,8 @@ screen and (min-resolution: 192dpi) {
 
 .starability-basic>label {
     position: relative;
-    display: inline-block;
+    display: block;
+    /* display: inline-block */
     float: left;
     width: 30px;
     height: 30px;
