@@ -2,6 +2,9 @@ const Campground = require('../models/campground');
 
 const { cloudinary } = require('../cloudinary');
 
+const axios = require('axios');
+const openCageApiKey = process.env.OPEN_CAGE_API_KEY;
+
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({});
     res.render('campgrounds/index', { campgrounds });
@@ -12,12 +15,19 @@ module.exports.renderNewForm = (req, res) => {
 }
 
 module.exports.createCampground = async (req, res) => {
-    // if (!req.body.campground) throw new appError('Campground galat hai', 400);
+    const location = req.body.campground.location;
+    const limit = 1;
+    const response = await axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${openCageApiKey}&limit=${limit}`);
+    const geojsonCoordinates = response.data.results.map(result => ({
+        type: 'Point',
+        coordinates: [result.geometry.lng, result.geometry.lat]
+    }));
     const camp = new Campground(req.body.campground);
+    camp.geometry = geojsonCoordinates[0];
     camp.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     camp.author = req.user._id;
     await camp.save();
-    // console.log(camp);
+    console.log(camp);
     req.flash('success', 'Successfully formed the campground');
     res.redirect(`/campgrounds/${camp._id}`);
 }

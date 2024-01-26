@@ -23,6 +23,10 @@ const seedDb = async () => {
             title: `${randomArray(descriptors)} ${randomArray(places)}`,
             location: `${randomArray(cities).city}, ${randomArray(cities).state}`,
             price: price,
+            geometry: {
+                type: "Point",
+                coordinates: [84.3225496, 26.2632466]
+            },
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis veniam pariatur, nihil possimus asperiores perferendis illum mollitia nobis quia reprehenderit reiciendis ab, atque, delectus qui deserunt corrupti? Itaque, doloremque laudantium.',
             images: [
                 {
