@@ -1,0 +1,29 @@
+/* Add these styles to your CSS file */
+
+.custom-cluster-icon {
+    background-color: #4CAF50;
+    /* Default background color for clusters */
+    border-radius: 50%;
+    color: white;
+    text-align: center;
+    line-height: 40px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    /* Smooth transition for background color change */
+}
+
+.cluster-small {
+    background: radial-gradient(circle at 50% 50%, #43A047, #7CB342);
+    /* Gradient for small clusters */
+}
+
+.cluster-medium {
+    background: radial-gradient(circle at 50% 50%, #FFEE58, #FDD835);
+    /* Gradient for medium clusters */
+}
+
+.cluster-large {
+    background: radial-gradient(circle at 50% 50%, #FB8C00, #F4511E);
+    /* Gradient for large clusters */
+}

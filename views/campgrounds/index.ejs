@@ -1,4 +1,5 @@
 <% layout('layouts/boilerplate.ejs') %>
+<div id="map" style="width: 100%; height: 250px;"></div>
 <h1>All Campgrounds</h1>
 <% for(camp of campgrounds) { %>
 <div class="card mb-3">
@@ -29,3 +30,13 @@
   </div>
 </div>
 <% } %>
+
+<!-- leaflet and leaflet.markercluster js -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+<script>
+  const campgrounds = <%- JSON.stringify(campgrounds) %>;
+</script>
+
+<script src="/javascripts/clusterMap.js"></script>

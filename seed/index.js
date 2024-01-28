@@ -17,15 +17,19 @@ const randomArray = array => array[Math.floor(Math.random() * array.length)];
 const seedDb = async () => {
     await Campground.deleteMany({});
     console.log("Deleted the database!");
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 300; i++) {
+        const random1000 = Math.floor(Math.random() * 1000);
         const price = Math.floor(Math.random() * 2500) + 500;
         const seed = new Campground({
             title: `${randomArray(descriptors)} ${randomArray(places)}`,
-            location: `${randomArray(cities).city}, ${randomArray(cities).state}`,
+            location: `${cities[random1000].city}, ${cities[random1000].state}`,
             price: price,
             geometry: {
                 type: "Point",
-                coordinates: [84.3225496, 26.2632466]
+                coordinates: [
+                    cities[random1000].lng,
+                    cities[random1000].lat
+                ]
             },
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis veniam pariatur, nihil possimus asperiores perferendis illum mollitia nobis quia reprehenderit reiciendis ab, atque, delectus qui deserunt corrupti? Itaque, doloremque laudantium.',
             images: [
