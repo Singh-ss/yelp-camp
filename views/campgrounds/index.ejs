@@ -1,12 +1,12 @@
 <% layout('layouts/boilerplate.ejs') %>
-<div id="map" style="width: 100%; height: 250px;"></div>
+<div id="cluster-map"></div>
 <h1>All Campgrounds</h1>
 <% for(camp of campgrounds) { %>
 <div class="card mb-3">
   <div class="row">
     <div class="col-md-4">
       <% if (camp.images.length) { %>
-      <img class="img-fluid" alt="" src="<%=camp.images[0].url%>">
+      <img class="img-fluid" alt="" src="<%=camp.images[Math.floor(Math.random() * camp.images.length)].url%>">
       <% } else { %>
       <img class="img-fluid" alt="" src="https://res.cloudinary.com/dlfqidsk2/image/upload/YelpCamp/jadyi0ayzk0wyivksmb1.jpg">
       <% } %>

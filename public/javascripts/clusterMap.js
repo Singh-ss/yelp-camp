@@ -1,6 +1,6 @@
 // Initialize the map
 // India coordinates: [20.5937, 78.9629]
-const map = L.map('map').setView([20.5937, 78.9629], 5);
+const map = L.map('cluster-map').setView([20.5937, 78.9629], 5);
 
 // Add the CartoDB Positron tile layer for a light map style
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -57,7 +57,7 @@ const geojsonData = L.geoJson(geojson, {
         // Hover functionality
         marker.on('mouseover', function () {
             // Open the popup on hover
-            this.bindPopup(feature.properties.popUpMarkup, { closeButton: false, sticky: true }).openPopup();
+            this.bindPopup(feature.properties.popUpMarkup).openPopup();
         })
 
         // Close the popup when the cursor leaves the map
