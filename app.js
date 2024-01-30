@@ -2,7 +2,6 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
-
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -25,7 +24,10 @@ const mongoSanitize = require('express-mongo-sanitize');
 
 const helmet = require('helmet');
 
-mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp');
+const mongoDBStore = require('connect-mongo');
+
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelp-camp";
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -45,9 +47,23 @@ app.use(mongoSanitize({
     replaceWith: '_'
 }));
 
+const secret = process.env.SECRET || 'thissecretisnotsafe';
+const store = mongoDBStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret
+    },
+    touchAfter: 24 * 60 * 60
+});
+
+store.on("error", function (e) {
+    console.log("Session Store Error: ", e);
+})
+
 const sessionConfig = {
+    store,
     name: 'session',
-    secret: 'thissecretisnotsafe',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -146,6 +162,7 @@ app.use((err, req, res, next) => {
     res.status(status).render('error.ejs', { err });
 })
 
-app.listen(3000, () => {
-    console.log('Connected to 3000');
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Connected to port: ${port}`);
 });
