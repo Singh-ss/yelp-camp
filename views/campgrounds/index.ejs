@@ -6,9 +6,9 @@
   <div class="row">
     <div class="col-md-4">
       <% if (camp.images.length) { %>
-      <img class="img-fluid" alt="" src="<%=camp.images[Math.floor(Math.random() * camp.images.length)].url%>">
+      <img class="img-fluid" alt="" src="<%=camp.images[Math.floor(Math.random() * camp.images.length)].url%>" crossorigin="anonymous">
       <% } else { %>
-      <img class="img-fluid" alt="" src="https://res.cloudinary.com/dlfqidsk2/image/upload/YelpCamp/jadyi0ayzk0wyivksmb1.jpg">
+      <img class="img-fluid" alt="" src="https://res.cloudinary.com/dlfqidsk2/image/upload/YelpCamp/jadyi0ayzk0wyivksmb1.jpg" crossorigin="anonymous">
       <% } %>
     </div>
     <div class="col-md-8">
@@ -32,8 +32,8 @@
 <% } %>
 
 <!-- leaflet and leaflet.markercluster js -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js" crossorigin="anonymous"></script>
 
 <script>
   const campgrounds = <%- JSON.stringify(campgrounds) %>;

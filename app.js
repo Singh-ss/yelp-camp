@@ -2,6 +2,7 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -20,6 +21,10 @@ const User = require('./models/user.js');
 
 const userRoutes = require('./routes/users.js');
 
+const mongoSanitize = require('express-mongo-sanitize');
+
+const helmet = require('helmet');
+
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp');
 
 const db = mongoose.connection;
@@ -36,19 +41,74 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(mongoSanitize({
+    replaceWith: '_'
+}));
 
 const sessionConfig = {
+    name: 'session',
     secret: 'thissecretisnotsafe',
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        // secure: true,
         expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 };
 app.use(session(sessionConfig));
 app.use(flash());
+
+app.use(helmet());
+
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+    "https://unpkg.com/leaflet/dist/leaflet.js",
+    "https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"
+
+];
+const styleSrcUrls = [
+    "https://kit-free.fontawesome.com/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
+    "https://unpkg.com/leaflet/dist/leaflet.css",
+    "https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css",
+    "https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css",
+
+];
+const connectSrcUrls = [
+];
+const fontSrcUrls = [];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/dlfqidsk2/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://images.unsplash.com/",
+                "https://c.basemaps.cartocdn.com",
+                "https://a.basemaps.cartocdn.com",
+                "https://b.basemaps.cartocdn.com",
+                "https://unpkg.com/leaflet@1.9.4/dist/images/"
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());

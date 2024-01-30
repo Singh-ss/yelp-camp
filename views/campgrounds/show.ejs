@@ -9,7 +9,7 @@
 
         <% camp.images.forEach((img,i)=>{ %>
         <div class="carousel-item active <%= i===0?'active':'' %> ">
-          <img src="<%= img.url%>" class="d-block w-100" alt="">
+          <img src="<%= img.url%>" class="d-block w-100" alt="" crossorigin="anonymous">
         </div>
         <% }) %>
 
@@ -120,7 +120,7 @@
   </div>
 </div>
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js" crossorigin="anonymous"></script>
 
 <script>
   const campground = <%- JSON.stringify(camp) %>
