@@ -58,7 +58,19 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateCampground = async (req, res, next) => {
     const { id } = req.params;
     // console.log(req.body);
+
+    const location = req.body.campground.location;
+    const limit = 1;
+    const response = await axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${openCageApiKey}&limit=${limit}`);
+    const geojsonCoordinates = response.data.results.map(result => ({
+        type: 'Point',
+        coordinates: [result.geometry.lng, result.geometry.lat]
+    }));
+
     const camp = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+
+    camp.geometry = geojsonCoordinates[0];
+
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
     camp.images.push(...imgs);
     await camp.save();
